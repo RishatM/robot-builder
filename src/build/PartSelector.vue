@@ -1,5 +1,5 @@
 <template>
-  <div class="part">
+  <div class="part" :class="position">
     <img :src="selectedPart.src" title="arm"/>
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
@@ -18,7 +18,16 @@ function getNextValidIndex(index, length) {
   return incrementedIndex > length - 1 ? 0 : incrementedIndex;
 }
 export default {
-  props: ['parts', 'position'],
+  props: {
+    parts: { type: Array, required: true }, // define prop expected type
+    position: {
+      type: String,
+      required: true,
+      validator(value) { // validator to make sure we oass one of these values
+        return ['left', 'right', 'top', 'bottom', 'center'].includes(value);
+      },
+    },
+  },
   data() {
     return { selectedPartIndex: 0 };
   },
@@ -33,12 +42,14 @@ export default {
         this.selectedPartIndex,
         this.parts.length,
       );
+      this.$emit('partSelected', this.selectedPart);
     },
     selectPreviousPart() {
       this.selectedPartIndex = getPreviousValidIndex(
         this.selectedPartIndex,
         this.parts.length,
       );
+      this.$emit('partSelected', this.selectedPart);
     },
   },
 };

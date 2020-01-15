@@ -5,32 +5,41 @@
      </button>
     <div class="top-row">
       <div class="top part" :style="headBorderStyle">
-        <!-- can add more computed :style="[style, style]" -->
-        <!-- <div class="robot-name">
-          {{selectedRobot.head.title}}
-           <span v-show="selectedRobot.head.onSale" class="sale">Sale!</span>
-        </div> -->
 
+      <!-- HEAD -->
       <PartSelector
        :parts="availableParts.heads"
-       position="top"/>
+       position="top"
+       @partSelected="handleSelectedPart"/>
       </div>
     </div>
     <div class="middle-row">
+
+      <!-- LEFT ARM -->
       <PartSelector
        :parts="availableParts.arms"
-       position="left"/>
+       position="left"
+       @partSelected="part => selectedRobot.leftArm = part"/>
+
+       <!-- TORSO ARM -->
       <PartSelector
        :parts="availableParts.torsos"
-       position="center"/>
+       position="center"
+       @partSelected="part => selectedRobot.torso = part"/>
+
+      <!-- RIGHT ARM -->
       <PartSelector
        :parts="availableParts.arms"
-       position="right"/>
+       position="right"
+       @partSelected="part => selectedRobot.rightArm = part"/>
     </div>
     <div class="bottom-row">
+
+      <!-- BASE -->
       <PartSelector
        :parts="availableParts.bases"
-       position="bottom"/>
+       position="bottom"
+       @partSelected="part => selectedRobot.base = part"/>
     </div>
     <div>
       <h1>Cart</h1>
@@ -84,6 +93,9 @@ export default {
     },
   },
   methods: {
+    handleSelectedPart(e) {
+      console.log(e);
+    },
     addToCart() {
       const robot = this.selectedRobot;
       const cost = robot.head.cost
