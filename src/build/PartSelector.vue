@@ -23,33 +23,46 @@ export default {
     position: {
       type: String,
       required: true,
-      validator(value) { // validator to make sure we oass one of these values
+      validator(value) { // validator to make sure we pass one of these values
         return ['left', 'right', 'top', 'bottom', 'center'].includes(value);
       },
     },
   },
   data() {
-    return { selectedPartIndex: 0 };
+    return {
+      // we initialize selectedPartIndex to 0 so computed value selectedPart
+      // has default part selected
+      selectedPartIndex: 0,
+    };
   },
   computed: {
     selectedPart() {
       return this.parts[this.selectedPartIndex];
     },
   },
+  created() {
+    // on created we call method to emit selected part to parent
+    this.emitSelectedPart();
+  },
   methods: {
+    // emit selected part from child to parent
+    // we emit name of event 'partSelected' and data
+    emitSelectedPart() {
+      this.$emit('partSelected', this.selectedPart);
+    },
     selectNextPart() {
       this.selectedPartIndex = getNextValidIndex(
         this.selectedPartIndex,
         this.parts.length,
       );
-      this.$emit('partSelected', this.selectedPart);
+      this.emitSelectedPart();
     },
     selectPreviousPart() {
       this.selectedPartIndex = getPreviousValidIndex(
         this.selectedPartIndex,
         this.parts.length,
       );
-      this.$emit('partSelected', this.selectedPart);
+      this.emitSelectedPart();
     },
   },
 };

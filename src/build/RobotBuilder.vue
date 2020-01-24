@@ -7,10 +7,11 @@
       <div class="top part" :style="headBorderStyle">
 
       <!-- HEAD -->
+      <!-- each PartSelector component is its own instance with its own data -->
       <PartSelector
        :parts="availableParts.heads"
        position="top"
-       @partSelected="handleSelectedPart"/>
+       @partSelected="part => selectedRobot.head = part"/>
       </div>
     </div>
     <div class="middle-row">
@@ -62,6 +63,7 @@
 </template>
 
 <script>
+// we initialze availableParts and assign our imported parts array to it
 import availableParts from '../data/parts';
 import createdHookMixin from './created-hook-mixin';
 import PartSelector from './PartSelector.vue';
