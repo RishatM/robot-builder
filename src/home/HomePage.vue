@@ -5,7 +5,7 @@
         aria-hidden="true"/>
     </div>
     <div class="get-started">
-      <a href="">Get Started</a> building your first robot!
+      <router-link  :to="{name: 'Build'}">Get Started</router-link> building your first robot!
     </div>
   </div>
 </template>

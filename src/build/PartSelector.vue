@@ -1,6 +1,6 @@
 <template>
   <div class="part" :class="position">
-    <img :src="selectedPart.src" title="arm"/>
+    <img @click="showPartInfo()" :src="selectedPart.src" title="arm"/>
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
     <span class="sale" v-show="selectedPart.onSale">Sale!</span>
@@ -40,8 +40,13 @@ export default {
       return this.parts[this.selectedPartIndex];
     },
   },
+  // instead of created we use updated hook
   created() {
+    this.emitSelectedPart();
+  },
+  updated() {
     // on created we call method to emit selected part to parent
+    // updated runs on any DOM changes -> virtual DOM changes
     this.emitSelectedPart();
   },
   methods: {
@@ -55,14 +60,21 @@ export default {
         this.selectedPartIndex,
         this.parts.length,
       );
-      this.emitSelectedPart();
     },
     selectPreviousPart() {
       this.selectedPartIndex = getPreviousValidIndex(
         this.selectedPartIndex,
         this.parts.length,
       );
-      this.emitSelectedPart();
+    },
+    showPartInfo() {
+      this.$router.push({
+        name: 'Parts',
+        params: {
+          id: this.selectedPart.id,
+          partType: this.selectedPart.type,
+        },
+      });
     },
   },
 };
@@ -94,6 +106,7 @@ export default {
 }
 .part img {
   width:165px;
+  cursor: pointer;
 }
 .top {
   border-bottom: none;
