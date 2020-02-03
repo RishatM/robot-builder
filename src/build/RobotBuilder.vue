@@ -1,23 +1,24 @@
 <template>
- <div class="content">
+ <div v-if="availableParts" class="content">
     <div class="preview">
       <CollapsibleSection>
       <div class="preview-content">
         <div class="top-row">
-          <img :src="selectedRobot.head.src"/>
+          <img :src="'http://localhost:8081' + selectedRobot.head.src"/>
         </div>
         <div class="middle-row">
-          <img :src="selectedRobot.leftArm.src" class="rotate-left"/>
-          <img :src="selectedRobot.torso.src"/>
-          <img :src="selectedRobot.rightArm.src" class="rotate-right"/>
+          <img :src="'http://localhost:8081' + selectedRobot.leftArm.src" class="rotate-left"/>
+          <img :src="'http://localhost:8081' + selectedRobot.torso.src"/>
+          <img :src="'http://localhost:8081' + selectedRobot.rightArm.src" class="rotate-right"/>
         </div>
         <div class="bottom-row">
-          <img :src="selectedRobot.base.src"/>
+          <img :src="'http://localhost:8081' + selectedRobot.base.src"/>
         </div>
       </div>
          </CollapsibleSection>
          <button class="add-to-cart" @click="addToCart()">
      Add to Cart
+
      </button>
     </div>
 
@@ -67,13 +68,15 @@
 
 <script>
 // we initialze availableParts and assign our imported parts array to it
-import availableParts from '../data/parts';
 import createdHookMixin from './created-hook-mixin';
 import PartSelector from './PartSelector.vue';
 import CollapsibleSection from '../shared/CollapsibleSection.vue';
 
 export default {
   name: 'RobotBuilder',
+  created() {
+    this.$store.dispatch('getParts');
+  },
   // Before leave route guard to prevent losing progress
 
   // beforeRouteLeave(to, from, next) {
@@ -88,7 +91,6 @@ export default {
     return {
       addedToCart: false,
       cart: [],
-      availableParts,
       selectedRobot: {
         head: {},
         torso: {},
@@ -100,6 +102,9 @@ export default {
   },
   mixins: [createdHookMixin],
   computed: {
+    availableParts() {
+      return this.$store.state.parts;
+    },
     headBorderStyle() {
       return {
         border: this.selectedRobot.head.onSale
@@ -118,7 +123,8 @@ export default {
         + robot.torso.cost
         + robot.leftArm.cost
         + robot.rightArm.cost + robot.base.cost;
-      this.$store.commit('addRobotToCart', Object.assign({}, robot, { cost }));
+      this.$store.dispatch('addRobotToCart', Object.assign({}, robot, { cost }))
+        .then(() => this.$router.push('/cart'));
       this.addedToCart = true;
     },
   },

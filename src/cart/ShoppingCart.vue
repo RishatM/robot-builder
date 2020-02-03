@@ -53,6 +53,15 @@
 <script>
 export default {
   name: 'Cart',
+  data() {
+    return {
+      bols: false,
+    };
+  },
+  created() {
+    const b = this.$store.state.cart;
+    console.log(b);
+  },
   computed: {
     cart() {
       return this.$store.state.cart;
