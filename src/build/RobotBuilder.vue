@@ -67,7 +67,7 @@
 </template>
 
 <script>
-// we initialze availableParts and assign our imported parts array to it
+import { mapActions } from 'vuex';
 import createdHookMixin from './created-hook-mixin';
 import PartSelector from './PartSelector.vue';
 import CollapsibleSection from '../shared/CollapsibleSection.vue';
@@ -75,7 +75,7 @@ import CollapsibleSection from '../shared/CollapsibleSection.vue';
 export default {
   name: 'RobotBuilder',
   created() {
-    this.$store.dispatch('getParts');
+    this.getParts();
   },
   // Before leave route guard to prevent losing progress
 
@@ -103,7 +103,7 @@ export default {
   mixins: [createdHookMixin],
   computed: {
     availableParts() {
-      return this.$store.state.parts;
+      return this.$store.state.robots.parts;
     },
     headBorderStyle() {
       return {
@@ -114,16 +114,17 @@ export default {
     },
   },
   methods: {
-    handleSelectedPart(e) {
-      console.log(e);
-    },
+    ...mapActions('robots', ['getParts', 'addRobotToCart']), // mapActions vuex store helper.
+    // robots is a namespace we give to mapActions this way it knows to see actions
+    // in robots.js, next in the [array] we supply which actions we want to map
+    // mapActions will then create methods with the same name as actions unless we specify a name
     addToCart() {
       const robot = this.selectedRobot;
       const cost = robot.head.cost
         + robot.torso.cost
         + robot.leftArm.cost
         + robot.rightArm.cost + robot.base.cost;
-      this.$store.dispatch('addRobotToCart', Object.assign({}, robot, { cost }))
+      this.addRobotToCart(Object.assign({}, robot, { cost }))
         .then(() => this.$router.push('/cart'));
       this.addedToCart = true;
     },

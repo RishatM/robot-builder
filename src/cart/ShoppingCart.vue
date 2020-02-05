@@ -59,15 +59,16 @@ export default {
     };
   },
   created() {
-    const b = this.$store.state.cart;
+    const b = this.$store.state.robots.cart;
     console.log(b);
   },
   computed: {
     cart() {
-      return this.$store.state.cart;
+      return this.$store.state.robots.cart;
     },
     cartSaleItems() {
-      return this.$store.getters.cartSaleItems;
+      return this.$store.getters['robots/cartSaleItems'];// since state.robot is now
+      // split into modules we have to define robot getter this way
     },
   },
 };
