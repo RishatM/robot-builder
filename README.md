@@ -3,7 +3,8 @@
 ## Project setup
 
 ```
-cd robot-api -> npm install -> npm start to run api server (robot-api serves images and data for client app)
+cd robot-api -> npm install -> npm start to run api server
+(robot-api serves images and data for client app)
 ```
 ```
 npm install
